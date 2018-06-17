@@ -1,10 +1,14 @@
 {
   "name": "periodicjs.ext.restful_api",
   "description": "An extension for exposing data via a restful interface.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "index.js",
   "engines": {
-    "node": "^6.x"
+    "node": "^8.x"
+  },
+  "author": {
+    "name": "yawetse",
+    "email": "yaw@repetere.io"
   },
   "contributors": [],
   "repository": {},

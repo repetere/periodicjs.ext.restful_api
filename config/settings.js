@@ -1,5 +1,5 @@
 'use strict';
-const package = require('../package.json');
+const packageJSON = require('../package.json');
 
 module.exports = {
   settings: {
@@ -16,7 +16,7 @@ module.exports = {
       'extension',
     ],
     route_path: 'api',
-    version: package.version,
+    version: packageJSON.version.split('.')[0],
   },
   databases: {
   },
