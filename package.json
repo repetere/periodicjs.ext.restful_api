@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.restful_api",
-  "description": "sample extension.",
-  "version": "0.0.1",
+  "description": "An extension for exposing data via a restful interface.",
+  "version": "0.1",
   "main": "index.js",
   "engines": {
     "node": "^6.x"
@@ -44,7 +44,7 @@
     "istanbul": "^0.4.3",
     "jsdoc": "^3.3.2",
     "mocha": "^2.2.5",
-    "periodicjs": "10.0.53",
+    "periodicjs": "^10.9.21",
     "node-mocks-http": "^1.6.2",
     "mocha-lcov-reporter": "^1.2.0",
     "mocha-sinon": "^2.0.0",
