@@ -1,0 +1,206 @@
+'use strict';
+const periodic = require('periodicjs');
+const sharedComponents = require('./sharedComponents.rjx');
+// const reactappLocals = periodic.locals.extensions.get('periodicjs.ext.reactapp');
+// let reactapp = periodic.locals.extensions.get('periodicjs.ext.reactapp').reactapp();
+const rjx = require('rjx');
+// const views = reactappLocals.server_manifest;
+const getSimplifiedRJX = rjx._rjxUtils.getSimplifiedRJX;
+
+const signInFormContent = [
+  {
+    form: {
+      props: {
+        method: 'post',
+        autocomplete: 'off',
+        action: '/apiconnect/account/login',
+        style: {
+          marginBottom:0,
+        },
+      },
+      children: [
+        {
+          input: {
+            props: {
+              type: 'hidden',
+              name: '_csrf',
+            },
+            resourceprops: {
+              value: ['token', ],
+            },
+          },
+        },
+        {
+          input: {
+            props: {
+              type: 'hidden',
+              name: 'entitytype',
+              value: 'account',
+            },
+          },
+        },
+        {
+          Label: {
+            children:'Username',
+          },
+        },
+        {
+          Input: {
+            props: {
+              name: 'username',
+              type: 'text',
+              placeholder: 'username',
+              autocomplete: 'off',
+            },
+            // value:'account',
+          },
+        },
+        {
+          Label: {
+            children:'Password',
+          },
+        },
+        {
+          Input: {
+            props: {
+              name: 'password',
+              type: 'password',
+              placeholder: 'password',
+              autocomplete: 'off',
+            },
+            // value:'account',
+          },
+        },
+        {
+          div: {
+            props: {
+              display:'flex',
+            },
+            children: [
+              {
+                a: {
+                  props: {
+                    href: '/auth/forgot',
+                    type: 'button',
+                    style: {
+                      justifyContent: 'center',
+                    },
+                  },
+                  children: 'Forgot password',
+                },
+              },
+            ],
+          },
+        },
+        {
+          hr: {
+            props: {
+              style: {
+                borderTop: 'none',
+                borderRight: 'none',
+                borderBottom: '1px solid rgb(228, 228, 228)',
+                borderLeft: 'none',
+                borderImage: 'initial',
+              },
+            },
+          },
+        },
+        {
+          section: {
+            props: {
+              style: {
+                display: 'flex',
+                justifyContent:'center',
+              },              
+            },
+            children: [
+              {
+                Button: {
+                  props: {
+                    type: 'submit',
+                    style: {
+                      justifyContent: 'center',
+                    },
+                    color: 'isPrimary',
+                  },
+                  children: 'Login',
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
+];
+
+function getTemplate(options = {}) {
+  const body = {
+    Columns: {
+      'props': {
+        // 'size': 'isFullheight',
+        style: {
+          // display:'flex',
+          // alignItems: 'center',
+          // justifyContent: 'center',
+          // background:'none',
+        },
+      },
+      children: [
+        {
+          Column: {
+            props: {
+              size:'is3',
+            },
+          },
+        },
+        {
+          Column: {
+            children: [
+              {
+                Title: {
+                  props: {
+                    style: {
+                      textAlign:'center',
+                    },
+                  },
+                  children:'Login to connect APIs',
+                },
+              },
+              // getSimplifiedRJX(
+              //   reactappLocals.server_manifest.card.getCard({
+              //     props: {
+              //       cardProps: {
+              //         isFullwidth: true,
+              //       },
+              //     },
+              //     // title:'Sign in',
+              //     content: signInFormContent,
+              //   })
+              // ),
+            ],
+          },
+        },
+        {
+          Column: {
+            props: {
+              size:'is3',
+            },
+          },
+        },
+      ],
+    },
+  };
+  const title = 'API Connect Login';
+  // const bodyRJX = views.standard.getPageWrapper({
+  //   children: [body,],
+  // });
+  // console.log({ bodyRJX, });
+  // console.log(getSimpleRJX({ component: 'div', props: {}, children:'hello', }));
+  return sharedComponents.getPageWrapper({ body, title, });
+}
+
+module.exports = {
+  // template,
+  getTemplate,
+};

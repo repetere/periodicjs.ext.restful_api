@@ -1,4 +1,11 @@
 {
+  "author": {
+    "name": "Yaw Etse",
+    "email": "yaw@repetere.io"
+  },
+  "bugs": {
+    "url": "https://github.com/repetere/periodicjs.ext.restful_api/issues"
+  },
   "config": {
     "blanket": {
       "pattern": [
@@ -14,6 +21,7 @@
     "react-highlight": "^0.12.0",
     "rjx": "^1.5.4"
   },
+  "deprecated": false,
   "description": "An extension for exposing data via a restful interface.",
   "devDependencies": {
     "browserify": "^13.0.0",
@@ -49,6 +57,7 @@
   "engines": {
     "node": "^8.x"
   },
+  "homepage": "https://github.com/repetere/periodicjs.ext.restful_api#readme",
   "keywords": [],
   "license": "MIT",
   "main": "index.js",
@@ -59,17 +68,10 @@
     "type": "git",
     "url": "git://github.com/repetere/periodicjs.ext.restful_api.git"
   },
-  "bugs": {
-    "url": "https://github.com/repetere/periodicjs.ext.restful_api/issues"
-  },
-  "author": {
-    "name": "Yaw Etse",
-    "email": "yaw@repetere.io"
-  },
   "scripts": {
     "postinstall": "cd ../../ && periodicjs aex periodicjs.ext.restful_api",
     "postuninstall": "cd ../../ && periodicjs rex periodicjs.ext.restful_api",
     "test": "mocha -R spec --recursive"
   },
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

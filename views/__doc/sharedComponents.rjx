@@ -1,0 +1,306 @@
+'use strict';
+const periodic = require('periodicjs');
+const periodicContainerSettings = periodic.settings.container;
+const CONTAINER_NAME = periodicContainerSettings.name;
+// const utilities = periodic.locals.container.get(CONTAINER_NAME);
+// const settings = periodicContainerSettings[ CONTAINER_NAME ];
+
+function getPageHeader(options = {}) {
+  const { title = 'API Connect', headerTags=[], } = options;
+  
+  return {
+    head: {
+      children: [
+        {
+          title: {
+            children: `API Documentation | ${title}`,
+            // resourceprops:{
+            //   _children:['emaildata', 'subject', ],
+            // },
+          },
+        },
+        {
+          meta: {
+            props: {
+              name: 'viewport',
+              content: 'width=device-width, initial-scale=1',
+            },
+          },
+        },
+        {
+          meta: {
+            props: {
+              charSet: 'utf-8',
+            },
+          },
+        },
+        {
+          link: {
+            props: {
+              rel: 'shortcut icon',
+              href: '/favicon.png',
+            },
+          },
+        },
+        {
+          link: {
+            props: {
+              href: '/extensions/periodicjs.ext.restful_api/vendor/rebulma/rebulma.css',
+              rel: 'stylesheet',
+            },
+          },
+        },
+        {
+          link: {
+            props: {
+              href: '/extensions/periodicjs.ext.restful_api/vendor/bulma/bulma.min.css',
+              rel: 'stylesheet',
+            },
+          },
+        },
+        {
+          link: {
+            props: {
+              href: '/extensions/periodicjs.ext.restful_api/vendor/fontawesome/css/fontawesome-all.css',
+              rel: 'stylesheet',
+            },
+          },
+        },
+        {
+          link: {
+            props: {
+              href: '/extensions/periodicjs.ext.restful_api/vendor/highlight/default.css',
+              rel: 'stylesheet',
+            },
+          },
+        },
+        {
+          link: {
+            props: {
+              href: '/extensions/periodicjs.ext.restful_api/vendor/highlight/github.css',
+              rel: 'stylesheet',
+            },
+          },
+        },
+        {
+          script: {
+            props: {
+              src: '/extensions/periodicjs.ext.restful_api/vendor/highlight/highlight.pack.js',
+            },
+          },
+        },
+        {
+          script: {
+            props: {
+              src: '/extensions/periodicjs.ext.restful_api/vendor/highlight/highlight.runner.js',
+            },
+          },
+        },
+      ].concat(headerTags),
+    },
+  };
+}
+
+function getPageWrapper(options = {}) {
+  const { title, navigationContent, headerTags, body, navigation='Documentation', } = options;
+  return {
+    html: {
+      props: {
+        lang:'en',
+      },
+      children: [
+        getPageHeader({ title, headerTags, }),
+        {
+          body: {
+            props: {
+              // style: {
+              //   background: '#ececec',
+              //   margin: '1rem',
+              //   padding: '1rem',
+              // },
+              className:'__ra_mc_loaded __reactapp_body_loaded',
+            },
+            children:[
+              {
+                div: {
+                  props: {
+                    style: {
+                      // margin: '1rem',
+                      // background: '#fff',
+                      // padding: '0.5rem',
+                    },
+                    id:'root',
+                  },
+                  children: [
+                    {
+                      div: {
+                        props: {
+                          className:'reactapp__app_div_content',
+                        },
+                        children: [
+                          {
+                            Container: {
+                              children: [
+                                {
+                                  Content: {
+                                    children: [
+                                                  
+                                      {
+                                        Nav: {
+                                          props: {
+                                            style: {
+                                              // position: 'fixed',
+                                              // top: '0px',
+                                              // left: '0px',
+                                              // right: '0px',
+                                              // // paddingTop: '0px',
+                                              // // paddingBottom: '0px',
+                                              // zIndex: 10000,
+                                              boxShadow: 'rgba(17, 17, 17, 0.1) 0px 2px 3px, rgba(17, 17, 17, 0.1) 0px 0px 0px 1px',
+                                              background: 'white',
+                                              padding:'1rem',
+                                            },
+                                          },
+                                          children: [
+                                            {
+                                              NavGroup: {
+                                                props: {
+                                                  align:'left',
+                                                },
+                                                children: [
+                                                  {
+                                                    NavItem: {
+                                                      children: [
+                                                        {
+                                                          Title: {
+                                                            children:' API Documentation',
+                                                          },
+                                                        },
+                                                      ],
+                                                    },
+                                                  },
+                                                ],
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          
+                          //body
+                          {
+                            main: {
+                              props: {
+                                style: {
+                                  paddingTop:'2rem',
+                                  paddingBottom:'2rem',
+                                  height:' 10x/0%',
+                                },
+                              },
+                              children: [
+                                {
+                                  Container: {
+                                    children: [
+                                      body,
+
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          // body,
+                          {
+                            Footer: {
+                              props:{
+                                style: {
+                                  padding:'1rem',
+                                },
+                              },
+                              children: [
+                                {
+                                  Container: {
+                                    children: [
+                                      {
+
+                                        Content: {
+                                          children: [
+                                            {
+                                              p: {
+                                                props: {
+                                                  style: {
+                                                    textAlign: 'center',
+                                                    width: '100%',
+                                                  },
+                                                },
+                                                children: [
+                                                  
+                                                  {
+                                                    hr: {
+                                                      props: {
+                                                        style: {
+                                                          background:'none',
+                                                          width: '50px',
+                                                          border: 0,
+                                                          borderBottom: '1px solid grey',
+                                                          margin: 'auto',
+                                                          padding:'0.5rem',
+                                                        },    
+                                                      },
+                                                    },
+                                                  },
+                                                ],
+                                              },  
+                                            },
+                                            {
+                                              p: {
+                                                props: {
+                                                  style: {
+                                                    textAlign:'center',
+                                                  },
+                                                },
+                                                children: [
+                                                  {
+                                                    span: {
+                                                      children: 'API Version ',
+                                                    },
+                                                  }, {
+                                                    span: {
+                                                      children: '1.0',
+                                                    },
+                                                  },
+                                                ],
+                                              },
+                                            },
+                                          ],   
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  };  
+} 
+
+module.exports = {
+  getPageHeader,
+  getPageWrapper,
+};

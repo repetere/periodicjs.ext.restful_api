@@ -1,0 +1,125 @@
+'use strict';
+const periodic = require('periodicjs');
+const sharedComponents = require('./sharedComponents.rjx');
+// const rjx = require('rjx');
+const panelLinks = [
+  {
+    link: '#authentication',
+    label: 'Authentication',
+    icon:'fa fa-lock',
+  },
+  {
+    link: '#endpoints',
+    label: 'End Points',
+    icon:'fa fa-link',
+  },
+  // {
+  //   link: '#methods',
+  //   label: 'Methods',
+  //   icon:'fa fa-gears',
+  // }
+  // ,
+  {
+    link: '#examples',
+    label: 'Examples',
+    icon:'fas fa-user-edit',
+  },
+  {
+    link: '#advanced',
+    label: 'Advanced',
+    icon:'fa fa-user',
+  },
+];
+const panel = [
+  {
+    Panel: {
+      children: [
+        {
+          PanelHeading: {
+            children:'Contents',
+          },
+        },
+      ].concat(panelLinks.map(panelLink => ({
+        PanelBlock: {
+         
+          children: [
+            // {
+            //   span: {
+            //     props: {
+            //       style: {
+            //         paddingRight:'0.5rem',
+            //       },
+            //       className:`${panelLink.icon} fa-xs`,
+            //     }
+            //   }
+            // },
+            {
+              a: {
+                props: {
+                  href:panelLink.link,
+                },
+                children:panelLink.label,
+              },
+            },
+          ],
+        },
+      }))),
+    },
+  },
+];
+const { _authentication,
+  _endpoints,
+  _methods,
+  _advanced,
+  _examples, } = require('./_content.rjx');
+
+function getTemplate(options = {}) {
+  const body = {
+    Columns: {
+      'props': {
+        style: {
+        },
+      },
+      children: [
+        {
+          Column: {
+            props: {
+              size:'is3',
+            },
+            children:panel,
+          },
+        },
+        {
+          Column: {
+            children: [
+              {
+                div: {
+                  props: {
+                    // style: {
+                    //   textAlign:'center',
+                    // },
+                  },
+                  children: [
+                    _authentication(),
+                    _endpoints(),
+                    // _methods(),
+                    _examples(),
+                    _advanced(),
+                  ],
+                },
+              },
+ 
+            ],
+          },
+        },
+      ],
+    },
+  };
+  const title = 'Getting Started';
+  return sharedComponents.getPageWrapper({ body, title, });
+}
+
+module.exports = {
+  // template,
+  getTemplate,
+};

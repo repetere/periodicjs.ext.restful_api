@@ -1,0 +1,666 @@
+'use strict';
+const periodic = require('periodicjs');
+const restfulAPISettings = periodic.settings.extensions[ 'periodicjs.ext.restful_api' ];
+const api_hostname = `${periodic.settings.application.protocol}${periodic.settings.application.url}`;
+const api_pathname = `${restfulAPISettings.route_path}/v${restfulAPISettings.version}`;
+const api_endpoint = `${api_hostname}/${api_pathname}/`;
+const pluralize = require('pluralize');
+
+function getContent(options = {}) {
+  const { header, headerLink, content, } = options;
+  return {
+    Card: {
+      props: {
+        isFullwidth: true,
+        style: {
+          marginBottom:'3rem',
+        },
+      },
+      children: [
+        {
+          CardHeader: {
+            children: [
+              {
+                CardHeaderTitle: {
+                  children: [
+                    {
+                      a: {
+                        props: {
+                          name: headerLink,
+                        },
+                        children: header,
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          
+        },
+        
+        {
+
+          CardContent: {
+            children:content,
+          },
+        },
+      ],
+    },
+  };
+}
+const wrapKeyword = (content) => `<code style="padding:0.25rem; background:#efefef;">${content}</code>`;
+
+const _authentication = ()=>getContent({
+  header: 'Authentication',
+  headerLink: 'authentication',
+  content: [
+    {
+      Content: {
+        props: {
+          dangerouslySetInnerHTML: {
+            __html: `
+<p style="font-weight:bold;">Overview</p>
+<p>All API require authentication via OAuth. To get started create a new application and you will recieve a ${wrapKeyword('client_id')} and a ${wrapKeyword('client_secret')}</pre>. Most endpoints use Application Authentication (OAuth Client Authentication and require your ${wrapKeyword('client_id')} and ${wrapKeyword('client_secret')} to be sent with every request).</p>
+<p>Enpoints that modify account information require User Authencatication (OAuth Bearer Authentication, and you must authorize your account to provide an access token).</p>
+<p style="font-weight:bold;">Application/Basic Authentication</p>
+<p>Using Headers (recommended) - Send an 'Authorization' header with a base64 encoded concacted string ${wrapKeyword('client_id:client_secret')} preceded with ${wrapKeyword('Basic')}. Example ${wrapKeyword('Basic NJf0sd9fjsklfjlskdf')} </p>
+<p>Using Parameters - Either post ${wrapKeyword('client_id = "your-client-id"')} and ${wrapKeyword('client_secret = "your-client_secret"')} <br/>or include them as request parameters ${wrapKeyword(api_endpoint+'?client_id=your-client_id&client_secret=your-client_secret')}</p>
+`,
+          },
+        },
+      },
+    },
+  ],
+});
+const _endpoints = function getEnpoins() {
+  const enpointsMap = periodic.locals.extensions.get('periodicjs.ext.restful_api').init.mountedAPIRoutes;
+  // console.log({ enpointsMap })
+  const endpoints = [];
+  enpointsMap.forEach((value, key) => {
+    const endpointName = pluralize(key.split('_')[ key.split('_').length - 1 ]);
+    endpoints.push({
+      Notification: {
+        props: {
+          className:'notification',
+        },
+        children: [
+          (value !== 'isClientAuthenticated')
+            ? {
+              p: {
+                props: {
+                  style: {
+                    fontWeight: 'bold',
+                    fontSize:'small',
+                  },
+                },
+                children:'*requires user/bearer authentication',
+              },
+            }
+            : {
+              div: {},
+            },
+          {
+            
+            p: {
+              props: {
+                style: {
+                  marginBottom:'0.5rem',
+                },
+              },
+              children: [
+                {
+                  span: {
+                    children: `/${endpointName} `,
+                  },
+                },
+                {
+                  Tag: {
+                    props: {
+                      className:'tag is-small is-success',
+                      style: {
+                        marginRight:'0.5rem',
+                      },
+                    },
+                    children:'GET',
+                  },
+                },
+                {
+                  Tag: {
+                    props: {
+                      className:'tag is-small is-primary',
+                      style: {
+                        marginRight:'0.5rem',
+                      },
+                    },
+                    children:'POST',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            p: {
+              children: [
+                {
+                  span: {
+                    children:`/${endpointName}/:id `,
+                  },
+                },
+                {
+                  Tag: {
+                    props: {
+                      className:'tag is-small is-success',
+                      style: {
+                        marginRight:'0.5rem',
+                      },
+                    },
+                    children:'GET',
+                  },
+                },
+                {
+                  Tag: {
+                    props: {
+                      className:'tag is-small is-info',
+                      style: {
+                        marginRight:'0.5rem',
+                      },
+                    },
+                    children:'PUT',
+                  },
+                },
+                {
+                  Tag: {
+                    props: {
+                      className: 'tag is-danger',
+                      style: {
+                        marginRight:'0.5rem',
+                      },
+                    },
+                    children:'DELETE',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    });
+  });
+
+  return getContent({
+    header: 'End Points',
+    headerLink: 'endpoints',
+    content: [
+      {
+        div: {
+          children: [
+            {
+              div: {
+                props: {
+                  dangerouslySetInnerHTML: {
+                    __html: `<p style="font-weight:bold; margin-bottom:1rem;">Overview</p>
+<p style="margin-bottom:1rem;">Your API Endpoints are mounted on ${wrapKeyword(api_endpoint)}</p>`,
+                  },
+                },
+              },
+            },
+            {
+              div: {
+                children: endpoints,
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+};
+const  _methods=()=>getContent({
+  header: 'Methods',
+  headerLink: 'methods',
+  content: [
+    {
+      Content: {
+        children:'hello endpoints',
+      },
+    },
+  ],
+});
+
+// const api_hostname = `${periodic.settings.application.protocol}${periodic.settings.application.url}`;
+// const api_pathname = `${restfulAPISettings.route_path}/v${restfulAPISettings.version}`;
+// const api_endpoint = `${api_hostname}/${api_pathname}/`;
+const  _examples=()=>getContent({
+  header: 'Examples',
+  headerLink: 'examples',
+  content: [
+    {
+      Content: {
+        children: [
+          {
+            p: {
+              children: [
+                {
+                  Tag: {
+                    props: {
+                      className:'tag is-small is-success',
+                      style: {
+                        marginRight:'0.5rem',
+                      },
+                    },
+                    children:'GET',
+                  },
+                },
+                {
+                  span: {
+                    children:`${api_hostname}/${api_pathname}/transactions/1234 - get a single transaction`,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            Highlight: {
+              props: {
+                className:'http',
+              },
+              children: `
+GET /${api_pathname}/transactions/1234 HTTP/1.1
+Host: ${api_hostname}
+Authorization: Basic NF0j9sfh908jhfasdasdz
+Content-Type: application/json; charset=utf-8
+Content-Length: 137
+
+{
+  "result": "success",
+  "status": 200,
+  "data": {
+    "entitytype": "transaction",
+    "_id": "1234",
+    "type": "POS",
+    "dimension": "raw",
+    "date": "2018-04-25T11:03:00.000Z",
+    "source_type": "CloverPOS",
+    "source_id": "5678",
+    "total": 3.5,
+    "discount_total": 0,
+    "tax_total": 0.5,
+    "gross_total": 3,
+    "voided": false,
+    "raw": {
+        "line_item_date": "25-Apr-2018 07:03 AM EDT",
+        "order_id": "K4M1PVEVRS464",
+        "item_name": "Croissant Plain",
+        "total_price": "3.50",
+        "net_price": "3.00",
+        "total_tax": "0.50",
+        "total_discount": "0",
+        "location": "Store 1234",
+        "tender": "Cash",
+        "card_brand": "",
+        "total_amount": "6.5",
+        "net_amount": "6.5",
+        "price": null,
+    },
+    "channel": "Cash",
+    "origin_time_zone": "2018-04-25T07:03:00.000-04:00",
+    "origin_date_string": "25-Apr-2018 07:03 AM",
+    "local_time_zone": "America/New_York",
+    "local_date_string": "Wed, 25 Apr 2018 07:03:00 EDT",
+    "gmt_date_string": "Wed, 25 Apr 2018 11:03:00 GMT",
+    "year": 2018,
+    "month": 4,
+    "day": 25,
+    "hour": 7,
+    "minute": 3,
+    "second": 0,
+    "week": 17,
+    "weekday": 3,
+    "weekend": false,
+    "quarter_hour": 29,
+    "createdat": "2018-06-11T18:20:35.072Z",
+    "updatedat": "2018-06-11T18:20:35.072Z",
+    "__v": 0
+  }
+}
+              `,
+            },
+          },
+          {
+            p: {
+              children: [
+                {
+                  Tag: {
+                    props: {
+                      className:'tag is-small is-success',
+                      style: {
+                        marginRight:'0.5rem',
+                      },
+                    },
+                    children:'GET',
+                  },
+                },
+                {
+                  span: {
+                    children:`${api_hostname}/${api_pathname}/transactions - get multiple transactions`,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            Highlight: {
+              props: {
+                className:'http',
+              },
+              children: `
+GET /${api_pathname}/transactions HTTP/1.1
+Host: ${api_hostname}
+Authorization: Basic NF0j9sfh908jhfasdasdz
+Content-Type: application/json; charset=utf-8
+Content-Length: 137
+
+{
+  "result": "success",
+  "status": 200,
+  "data": {
+      "transactionscount": 3,
+      "transactionlimit": "3",
+      "transactionoffset": 0,
+      "transactionpages": 1,
+      "transactionpage_current": 1,
+      "transactionpage_next": 2,
+      "transactionpage_prev": 0,
+      "transactions": {
+          "documents": [
+              {
+                  "entitytype": "transaction",
+                  "_id": "5b1ebd73aa27c968acdf15df",
+                  "type": "POS",
+                  "dimension": "raw",
+                  "date": "2018-04-25T11:03:00.000Z",
+                  "source_type": "CloverPOS",
+                  "source_id": "K4M1PVEVRS464",
+                  "total": 3.5,
+                  "discount_total": 0,
+                  "tax_total": 0,
+                  "gross_total": 3.5,
+                  "voided": false,
+                  "raw": {
+                      "line_item_date": "25-Apr-2018 07:03 AM EDT",
+                      "order_id": "K4M1PVEVRS464",
+                      "item_name": "Croissant Plain",
+                      "total_price": "3.50",
+                      "net_price": "3.50",
+                      "total_tax": "0",
+                      "total_discount": "0",
+                      "location": "Store 6",
+                      "tender": "Cash",
+                      "card_brand": "",
+                      "total_amount": "6.5",
+                      "net_amount": "6.5",
+                      "price": null,
+                      "discount_total": null,
+                      "promotion_total": null,
+                      "taxes": null,
+                      "net_sales": null,
+                      "total": null,
+                      "tax_total": null,
+                      "gross_total": null,
+                      "gross_sales": null,
+                      "total_sales": null
+                  },
+                  "channel": "Cash",
+                  "origin_time_zone": "2018-04-25T07:03:00.000-04:00",
+                  "origin_date_string": "25-Apr-2018 07:03 AM",
+                  "local_time_zone": "America/New_York",
+                  "local_date_string": "Wed, 25 Apr 2018 07:03:00 EDT",
+                  "gmt_date_string": "Wed, 25 Apr 2018 11:03:00 GMT",
+                  "year": 2018,
+                  "month": 4,
+                  "day": 25,
+                  "hour": 7,
+                  "minute": 3,
+                  "second": 0,
+                  "week": 17,
+                  "weekday": 3,
+                  "weekend": false,
+                  "quarter_hour": 29,
+                  "associated_data_entity_locations": null,
+                  "associated_data_entity_people": null,
+                  "associated_data_entity_products": null,
+                  "createdat": "2018-06-11T18:20:35.072Z",
+                  "updatedat": "2018-06-11T18:20:35.072Z",
+                  "__v": 0
+              },
+              {
+                  "entitytype": "transaction",
+                  "_id": "5b1ebd73aa27c968acdf15de",
+                  "type": "POS",
+                  "dimension": "raw",
+                  "date": "2018-04-25T11:03:00.000Z",
+                  "source_type": "CloverPOS",
+                  "source_id": "K4M1PVEVRS464",
+                  "total": 3,
+                  "discount_total": 0,
+                  "tax_total": 0,
+                  "gross_total": 3,
+                  "voided": false,
+                  "raw": {
+                      "line_item_date": "25-Apr-2018 07:03 AM EDT",
+                      "order_id": "K4M1PVEVRS464",
+                      "item_name": "Drip Coffee Large",
+                      "total_price": "3.00",
+                      "net_price": "3.00",
+                      "total_tax": "0",
+                      "total_discount": "0",
+                      "location": "Store 6",
+                      "tender": "Cash",
+                      "card_brand": "",
+                      "total_amount": "6.5",
+                      "net_amount": "6.5",
+                      "price": null,
+                      "discount_total": null,
+                      "promotion_total": null,
+                      "taxes": null,
+                      "net_sales": null,
+                      "total": null,
+                      "tax_total": null,
+                      "gross_total": null,
+                      "gross_sales": null,
+                      "total_sales": null
+                  },
+                  "channel": "Cash",
+                  "origin_time_zone": "2018-04-25T07:03:00.000-04:00",
+                  "origin_date_string": "25-Apr-2018 07:03 AM",
+                  "local_time_zone": "America/New_York",
+                  "local_date_string": "Wed, 25 Apr 2018 07:03:00 EDT",
+                  "gmt_date_string": "Wed, 25 Apr 2018 11:03:00 GMT",
+                  "year": 2018,
+                  "month": 4,
+                  "day": 25,
+                  "hour": 7,
+                  "minute": 3,
+                  "second": 0,
+                  "week": 17,
+                  "weekday": 3,
+                  "weekend": false,
+                  "quarter_hour": 29,
+                  "associated_data_entity_locations": null,
+                  "associated_data_entity_people": null,
+                  "associated_data_entity_products": null,
+                  "createdat": "2018-06-11T18:20:35.065Z",
+                  "updatedat": "2018-06-11T18:20:35.065Z",
+                  "__v": 0
+              },
+              {
+                  "entitytype": "transaction",
+                  "_id": "5b1ebd73aa27c968acdf15dd",
+                  "type": "POS",
+                  "dimension": "raw",
+                  "date": "2018-04-25T11:11:00.000Z",
+                  "source_type": "CloverPOS",
+                  "source_id": "S92S4DYWZVHYC",
+                  "total": 3.5,
+                  "discount_total": 0,
+                  "tax_total": 0,
+                  "gross_total": 3.5,
+                  "voided": false,
+                  "raw": {
+                      "line_item_date": "25-Apr-2018 07:11 AM EDT",
+                      "order_id": "S92S4DYWZVHYC",
+                      "item_name": "Cold Brew Coffee",
+                      "total_price": "3.50",
+                      "net_price": "3.50",
+                      "total_tax": "0",
+                      "total_discount": "0",
+                      "location": "Store 1",
+                      "tender": "Credit Card",
+                      "card_brand": "VISA",
+                      "total_amount": "3.5",
+                      "net_amount": "3.5",
+                      "price": null,
+                      "discount_total": null,
+                      "promotion_total": null,
+                      "taxes": null,
+                      "net_sales": null,
+                      "total": null,
+                      "tax_total": null,
+                      "gross_total": null,
+                      "gross_sales": null,
+                      "total_sales": null
+                  },
+                  "channel": "Credit Card",
+                  "origin_time_zone": "2018-04-25T07:11:00.000-04:00",
+                  "origin_date_string": "25-Apr-2018 07:11 AM",
+                  "local_time_zone": "America/New_York",
+                  "local_date_string": "Wed, 25 Apr 2018 07:11:00 EDT",
+                  "gmt_date_string": "Wed, 25 Apr 2018 11:11:00 GMT",
+                  "year": 2018,
+                  "month": 4,
+                  "day": 25,
+                  "hour": 7,
+                  "minute": 11,
+                  "second": 0,
+                  "week": 17,
+                  "weekday": 3,
+                  "weekend": false,
+                  "quarter_hour": 29,
+                  "associated_data_entity_locations": null,
+                  "associated_data_entity_people": null,
+                  "associated_data_entity_products": null,
+                  "createdat": "2018-06-11T18:20:35.059Z",
+                  "updatedat": "2018-06-11T18:20:35.059Z",
+                  "__v": 0
+              }
+          ],
+          "count": 3
+      },
+      "transactionstotal": 24658,
+      "transactionstotalpages": 8220,
+      "periodic": {
+          "name": "Acme (acme.repapp.io) [development]"
+      },
+      "request": {
+          "query": {
+              "format": "json",
+              "limit": "3",
+              "pagenum": 1
+          },
+          "params": {},
+          "baseurl": "/api/v1",
+          "originalurl": "/api/v1/transactions/?limit=3",
+          "parsed": {
+              "protocol": null,
+              "slashes": null,
+              "auth": null,
+              "host": null,
+              "port": null,
+              "hostname": null,
+              "hash": null,
+              "search": "?limit=3",
+              "query": "limit=3",
+              "pathname": "/transactions/",
+              "path": "/transactions/?limit=3",
+              "href": "/transactions/?limit=3",
+              "_raw": "/transactions/?limit=3"
+          },
+          "remoteAddress": "::ffff:127.0.0.1",
+          "headerHost": ${api_hostname}
+      }
+  }
+}
+              `,
+            },
+          },
+        ],
+      },
+    },
+  ],
+});
+const  _advanced=()=>getContent({
+  header: 'Advanced',
+  headerLink: 'advanced',
+  content: [
+    {
+      Content: {
+        children: [
+          {
+            p: {
+              children:'Below are the options for querying data',
+            },
+          },
+          {
+            p: {
+              children:`Advanced Query: "${api_endpoint}transactions/?limit=100&skip=10&fq=name|||like|||pizza&fq=createdat|||gt-date|||2016-10-15T08:27:00"`,
+            },
+          },
+          {
+            Highlight: {
+              props: {
+                className:'javascript',
+              },
+              children: `
+  
+//Request query options
+{
+  "limit": 15,
+  "skip": 0,
+  "sort": "-date",
+  "pagenum": 1,
+  "values": "",
+  "fq": undefined,
+  // size,
+  // lte,lte-date,lt,lt-gate,
+  // gt,gt-date,gte,gte-date,
+  // not,not-date,
+  // not-in,in,
+  // has,exists,
+  // all,contains
+}
+
+//filter examples
+filter = "name|||like|||pizza"
+filter = "createdat|||gte-date|||2017-11-28T13:32"
+filter = "category|||not-in|||take-out,delivery"
+
+//value examples
+values="id1,id2,id3"
+              `,
+            },
+          },
+        ],
+      },
+    },
+  ],
+});
+
+module.exports = {
+  getContent,
+  _authentication,
+  _endpoints,
+  _methods,
+  _examples,
+  _advanced,
+};
