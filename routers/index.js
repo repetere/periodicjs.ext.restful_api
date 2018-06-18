@@ -1,14 +1,12 @@
 'use strict';
 
 const periodic = require('periodicjs');
-const extensionRouter = periodic.express.Router();
-const fs = require('fs-extra');
-const path = require('path');
-const packageJson = fs.readJsonSync(path.join(__dirname, '../package.json'));
-const preTransforms = periodic.utilities.middleware.preTransforms(periodic);
+const utilities = require('../utilities');
+const asyncExtensionRouter = utilities.init.extensionRouter;
+const controllers = require('../controllers');
+// const extensionRouter = periodic.express.Router();
+const restfulAPISettings = periodic.settings.extensions['periodicjs.ext.restful_api'];
 
-extensionRouter.all(packageJson.name, preTransforms, (req, res) => {
-  res.send(`EXTENSION ${packageJson.name}`);
-});
+periodic.app.use(`/${restfulAPISettings.route_path}/v${restfulAPISettings.version}`, controllers.apiMiddleware);
 
-module.exports = extensionRouter;
+module.exports = asyncExtensionRouter;

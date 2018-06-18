@@ -1,17 +1,4 @@
 {
-  "name": "periodicjs.ext.restful_api",
-  "description": "An extension for exposing data via a restful interface.",
-  "version": "0.1.1",
-  "main": "index.js",
-  "engines": {
-    "node": "^8.x"
-  },
-  "author": {
-    "name": "yawetse",
-    "email": "yaw@repetere.io"
-  },
-  "contributors": [],
-  "repository": {},
   "config": {
     "blanket": {
       "pattern": [
@@ -19,13 +6,9 @@
       ]
     }
   },
-  "license": "MIT",
-  "scripts": {
-    "test": "mocha -R spec --recursive",
-    "postinstall": "cd ../../ && periodicjs aex periodicjs.ext.restful_api",
-    "postuninstall": "cd ../../ && periodicjs rex periodicjs.ext.restful_api"
-  },
+  "contributors": [],
   "dependencies": {},
+  "description": "An extension for exposing data via a restful interface.",
   "devDependencies": {
     "browserify": "^13.0.0",
     "chai": "^3.0.0",
@@ -48,17 +31,39 @@
     "istanbul": "^0.4.3",
     "jsdoc": "^3.3.2",
     "mocha": "^2.2.5",
-    "periodicjs": "^10.9.21",
-    "node-mocks-http": "^1.6.2",
     "mocha-lcov-reporter": "^1.2.0",
     "mocha-sinon": "^2.0.0",
+    "node-mocks-http": "^1.6.2",
+    "periodicjs": "^10.9.21",
     "semver": "^5.3.0",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0"
   },
-  "keywords": [],
-  "bugs": {},
-  "maintainers": [],
   "directories": {},
-  "optionalDependencies": {}
+  "engines": {
+    "node": "^8.x"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [],
+  "name": "periodicjs.ext.restful_api",
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/repetere/periodicjs.ext.restful_api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/repetere/periodicjs.ext.restful_api/issues"
+  },
+  "author": {
+    "name": "Yaw Etse",
+    "email": "yaw@repetere.io"
+  },
+  "scripts": {
+    "postinstall": "cd ../../ && periodicjs aex periodicjs.ext.restful_api",
+    "postuninstall": "cd ../../ && periodicjs rex periodicjs.ext.restful_api",
+    "test": "mocha -R spec --recursive"
+  },
+  "version": "1.0.0"
 }

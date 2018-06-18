@@ -1,6 +1,6 @@
 # periodicjs.ext.restful_api [![Coverage Status](https://coveralls.io/repos/github/githubUserOrgName/periodicjs.ext.restful_api/badge.svg?branch=master)](https://coveralls.io/github/githubUserOrgName/periodicjs.ext.restful_api?branch=master) [![Build Status](https://travis-ci.org/githubUserOrgName/periodicjs.ext.restful_api.svg?branch=master)](https://travis-ci.org/githubUserOrgName/periodicjs.ext.restful_api)
 
-A simple extension.
+Mount core datas via a restful api.
 
 [API Documentation](https://github.com/githubUserOrgName/periodicjs.ext.restful_api/blob/master/doc/api.md)
 
