@@ -4,10 +4,10 @@ const restfulAPISettings = periodic.settings.extensions[ 'periodicjs.ext.restful
 const rjx = require('rjx');
 const rebulma = require('re-bulma');
 const reactHighlight = require('react-highlight');
-console.log({reactHighlight})
+// console.log({reactHighlight})
 const renderRJX = rjx.rjxHTMLString.bind({
   debug: true,
-  reactComponents: Object.assign({},rebulma,{Highlight:reactHighlight.default}),
+  reactComponents: Object.assign({}, rebulma, { Highlight:reactHighlight.default, }),
 });
 
 function apiMiddleware(req, res, next) {
@@ -30,8 +30,8 @@ function indexView(req, res) {
   const viewdata = Object.assign({
     passportUser: req.user,
   },
-    res.locals,
-    req.controllerData);
+  res.locals,
+  req.controllerData);
   const viewtemplate = indexTemplate.getTemplate();
   const rjxString = renderRJX({
     rjx: viewtemplate,
@@ -45,8 +45,8 @@ function customizeView(req, res) {
   const viewdata = Object.assign({
     passportUser: req.user,
   },
-    res.locals,
-    req.controllerData);
+  res.locals,
+  req.controllerData);
   const viewtemplate = customizeTemplate.getTemplate();
   const rjxString = renderRJX({
     rjx: viewtemplate,
