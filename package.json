@@ -7,7 +7,13 @@
     }
   },
   "contributors": [],
-  "dependencies": {},
+  "dependencies": {
+    "bulma": "^0.7.1",
+    "highlight.js": "^9.12.0",
+    "re-bulma": "^0.5.0",
+    "react-highlight": "^0.12.0",
+    "rjx": "^1.5.4"
+  },
   "description": "An extension for exposing data via a restful interface.",
   "devDependencies": {
     "browserify": "^13.0.0",
@@ -65,5 +71,5 @@
     "postuninstall": "cd ../../ && periodicjs rex periodicjs.ext.restful_api",
     "test": "mocha -R spec --recursive"
   },
-  "version": "1.0.0"
+  "version": "1.1.0"
 }
