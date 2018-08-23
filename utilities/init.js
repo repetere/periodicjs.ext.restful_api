@@ -23,15 +23,15 @@ const authenticationMap = {
     type: 'extension',
     name:'periodicjs.ext.passport',
   },
-}
+};
 
 function getAuthenticationController(options = {}) {
-  const { core_data_name, } = options;
+  const { core_data_name, authentication_function_name, } = options;
   const restfulAPISettings = periodic.settings.extensions[ 'periodicjs.ext.restful_api' ];
   const defaultFunctionName = 'isClientAuthenticated';
   const defaultAuthenticationController = periodic.controllers.extension.get('periodicjs.ext.oauth2server').auth.isClientAuthenticated;
   try {
-    const authenticationFunctionName = restfulAPISettings.authentication[ core_data_name ];
+    const authenticationFunctionName = authentication_function_name || restfulAPISettings.authentication[ core_data_name ];
     const functionMapObject = authenticationMap[ authenticationFunctionName ];
     if (functionMapObject) {
       return {
@@ -60,11 +60,12 @@ function getAuthenticationController(options = {}) {
 
 
 function api(options = {}) {
+  const { additional_api_routes = [], } = options;
   return new Promise((resolve, reject) => {
     try {
       const restfulAPISettings = periodic.settings.extensions['periodicjs.ext.restful_api'];
       // console.log('ADDING ROUTES',{restfulAPISettings});
-
+      const additional_routes = [].concat(restfulAPISettings.additional_routes, additional_api_routes);
       periodic.routers.forEach((value, key) => {
         if (key.indexOf('_default_') === -1
           && key.indexOf('extension_') === -1
@@ -81,12 +82,22 @@ function api(options = {}) {
           //   // value,
           //   authenticationController
           // })
-          // console.log({ key, authenticationController },`/${restfulAPISettings.route_path}/v${restfulAPISettings.version}`
-            // , value.router
-          // );
-          // console.log(value.router);
-          extensionRouter.use(`/${entity_plural_name}`,authenticationController.controller);
+          extensionRouter.use(`/${entity_plural_name}`, authenticationController.controller);
           extensionRouter.use(value.router);
+        }
+      });
+      additional_routes.forEach(routeOptions => {
+        const { core_data_name, authentication_function_name, mount_path, } = routeOptions;
+        if (mountedAPIRoutes.has(mount_path) === false) {
+          const value = periodic.routers.get(core_data_name);
+          const authenticationController = getAuthenticationController({ authentication_function_name, });
+          // console.log({
+          //   mount_path,
+          //   value,
+          //   authenticationController
+          // })
+          mountedAPIRoutes.set(mount_path, authenticationController.name);
+          extensionRouter.use(`/${mount_path}`, authenticationController.controller, value.router);
         }
       });
       resolve(true);
@@ -103,4 +114,3 @@ module.exports = {
   getAuthenticationController,
   extensionRouter,
 };
-

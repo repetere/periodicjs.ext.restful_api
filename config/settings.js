@@ -12,6 +12,8 @@ module.exports = {
       clients:'ensureApiAuthenticated',
       crons:'ensureApiAuthenticated',
       cronhoststatuses:'ensureApiAuthenticated',
+      layouts:'ensureApiAuthenticated',
+      layoutitems:'ensureApiAuthenticated',
       userroles:'ensureApiAuthenticated',
       userprivileges:'ensureApiAuthenticated',
       users:'ensureApiAuthenticated',
@@ -31,6 +33,13 @@ module.exports = {
       'dblog_logger',
       'dynamicapi_api',
       'standard_client',
+    ],
+    additional_routes: [
+      // {
+      //   core_data_name: 'standard_layout',
+      //   authentication_function_name: 'ensureApiAuthenticated',
+      //   mount_path:'auth_layouts',
+      // }
     ],
     route_path: 'api',
     version: packageJSON.version.split('.')[0],
