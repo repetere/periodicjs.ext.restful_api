@@ -31,8 +31,14 @@ async function fullDocumentUpdate(req) {
     const coredata = coredataAPIRoutes.get(coreDataPart);
     if (coredata) {
       const dbdoc = await periodic.datas.get(coredata).load({ query: utilities.controllerhelper.getIdQuery(req.query.docid || req.query._id || req.body.docid || req.body._id || req.params.id), });
-      const doc = dbdoc.toJSON ? dbdoc.toJSON() : dbdoc;
+      const doc = dbdoc && dbdoc.toJSON ? dbdoc.toJSON() : dbdoc;
       req.body = Object.assign({}, doc, req.body);
+      // console.log('doc', doc);
+      // console.log('AFTER req.body', req.body);
+      // console.log('coreDataPart', coreDataPart);
+      // console.log('req.params', req.params);
+      // console.log('req.query', req.query);
+      // console.log('req.body', req.body);
     }
   }
   return req;
@@ -79,7 +85,7 @@ function fixFlattenedSubmit(req) {
   });
   if (hasFlattenedSubmit) {
     // req.body = str2json.convert(req.body);
-    console.log('BEFORE req.body', req.body);
+    // console.log('BEFORE req.body', req.body);
     req.body = flatten.unflatten(req.body);
     if (!req.body.docid && req.body._id) {
       req.body.docid = req.body._id;
