@@ -1,8 +1,10 @@
 'use strict';
 const packageJSON = require('../package.json');
+const periodic = require('periodicjs');
 
 module.exports = {
   settings: {
+    encryption_key_path: periodic.settings.application.server.https.ssl.private_key,
     initialization_status_events: [
       'extension-periodicjs.ext.dynamic_core_data-configured',
     ], 

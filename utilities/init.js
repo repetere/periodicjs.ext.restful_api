@@ -4,7 +4,12 @@ const periodicContainerSettings = periodic.settings.container;
 const CONTAINER_NAME = periodicContainerSettings.name;
 const extensionRouter = periodic.express.Router();
 const mountedAPIRoutes = new Map();
+const coredataAPIRoutes = new Map();
 const pluralize = require('pluralize');
+const controllers = require('../controllers');
+const oauth2serverControllers = periodic.controllers.extension.get('periodicjs.ext.oauth2server');
+extensionRouter.use(controllers.approveOptionsRequest);
+extensionRouter.get('/secure-asset/:id/:filename', oauth2serverControllers.auth.ensureApiAuthenticated, controllers.decryptAsset);
 
 const authenticationMap = {
   ensureApiAuthenticated: {
@@ -58,7 +63,6 @@ function getAuthenticationController(options = {}) {
   }
 }
 
-
 function api(options = {}) {
   const { additional_api_routes = [], } = options;
   return new Promise((resolve, reject) => {
@@ -76,13 +80,19 @@ function api(options = {}) {
           const entity_plural_name = pluralize(key.replace(`${value.router_base}_`, '')); //standard_user => users
           const authenticationController = getAuthenticationController({ core_data_name: entity_plural_name, });
           mountedAPIRoutes.set(key, authenticationController.name);
+          coredataAPIRoutes.set(entity_plural_name, key);
           // console.log({
           //   key,
           //   entity_plural_name,
           //   // value,
           //   authenticationController
           // })
-          extensionRouter.use(`/${entity_plural_name}`, authenticationController.controller);
+          extensionRouter.use(`/${entity_plural_name}`, 
+            authenticationController.controller,
+            controllers.handleFileUpload,
+            controllers.fixCodeMirrorSubmit,
+            controllers.fixFlattenedSubmit,
+            controllers.fullDocumentUpdate);
           extensionRouter.use(value.router);
         }
       });
@@ -97,7 +107,27 @@ function api(options = {}) {
           //   authenticationController
           // })
           mountedAPIRoutes.set(mount_path, authenticationController.name);
-          extensionRouter.use(`/${mount_path}`, authenticationController.controller, value.router);
+          coredataAPIRoutes.set(mount_path, core_data_name);
+
+          // extensionRouter.put(`/${mount_path}`,
+          //   (req, res, next) => { console.log('IN MOUNTED API'); next(); },
+          //   authenticationController.controller, 
+          //   controllers.handleFileUpload,
+          //   controllers.fixCodeMirrorSubmit,
+          //   controllers.fixFlattenedSubmit,
+          //   controllers.fullDocumentUpdate);
+          // extensionRouter.post(`/${mount_path}`,
+          //   authenticationController.controller, 
+          //   controllers.handleFileUpload,
+          //   controllers.fixCodeMirrorSubmit,
+          //   controllers.fixFlattenedSubmit);
+          extensionRouter.use(`/${mount_path}`,
+            authenticationController.controller, 
+            controllers.handleFileUpload,
+            controllers.fixCodeMirrorSubmit,
+            controllers.fixFlattenedSubmit,
+            controllers.fullDocumentUpdate,
+            value.router);
         }
       });
       resolve(true);
@@ -110,6 +140,7 @@ function api(options = {}) {
 module.exports = {
   api,
   mountedAPIRoutes,
+  coredataAPIRoutes,
   authenticationMap,
   getAuthenticationController,
   extensionRouter,

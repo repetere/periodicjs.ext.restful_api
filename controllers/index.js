@@ -55,9 +55,56 @@ function customizeView(req, res) {
   res.send(rjxString);
 }
 
+function approveOptionsRequest (req, res, next) {
+  // console.log('req.method', req.method);
+  if (req.method && typeof req.method === 'string' && req.method.toUpperCase() === 'OPTIONS') {
+    res.send('ok pre-flight');
+    // res.sendStatus(200);
+  } else {
+    next();
+  }
+}
+
+function handleFileUpload(req, res, next) {
+  if (req.method !== 'PUT' && req.method !== 'POST') return next();
+  return periodic.locals.extensions.get('periodicjs.ext.restful_api').controllerhelper.handleFileUpload(req, res, next);
+}
+
+function fixCodeMirrorSubmit(req, res, next) {
+  if (req.method !== 'PUT' && req.method !== 'POST') return next();
+  req = periodic.locals.extensions.get('periodicjs.ext.restful_api').controllerhelper.fixCodeMirrorSubmit(req);
+  next();
+}
+
+function fixFlattenedSubmit(req, res, next) {
+  if (req.method !== 'PUT' && req.method !== 'POST') return next();
+  req = periodic.locals.extensions.get('periodicjs.ext.restful_api').controllerhelper.fixFlattenedSubmit(req);
+  next();
+}
+
+function decryptAsset(req, res, next) {
+  return periodic.locals.extensions.get('periodicjs.ext.restful_api').controllerhelper.decryptAsset(req, res, next);
+}
+
+function fullDocumentUpdate(req, res, next) {
+  if (req.method !== 'PUT' && req.method !== 'POST') return next();
+  periodic.locals.extensions.get('periodicjs.ext.restful_api').controllerhelper.fullDocumentUpdate(req)
+    .then(updatedReq => {
+      req = updatedReq;
+      next();
+    })
+    .catch(next);
+}
+
 module.exports = {
   apiMiddleware,
   requireAuthentication,
   indexView,
   customizeView,
+  approveOptionsRequest,
+  handleFileUpload,
+  fixCodeMirrorSubmit,
+  fixFlattenedSubmit,
+  decryptAsset,
+  fullDocumentUpdate,
 };
